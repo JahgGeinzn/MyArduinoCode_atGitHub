@@ -30,8 +30,8 @@ void setup()
   pinMode(mba,OUTPUT);
   pinMode(mbb,OUTPUT);
   
-  attachInterrupt(0, rencoder_r, CHANGE);
-  attachInterrupt(1, rencoder_l, CHANGE);
+  attachInterrupt(1, rencoder_r, CHANGE);
+  attachInterrupt(0, rencoder_l, CHANGE);
 }
 
 void loop()
@@ -129,7 +129,7 @@ int control_loop_r(int looptime , float speed_req, int PWM_val)
   {  ;  }       // enter tmed loop                                                          
  noInterrupts();
   speed_act=float(count_r- count_fomer)*1000/float(looptime*NUM_C);
-   PWM_val= PID_updata(PWM_val, speed_req, speed_act);   // compute PWM 
+  PWM_val= PID_updata(PWM_val, speed_req, speed_act);   // compute PWM 
 return constrain(PWM_val, 0, 255);
 }
 
@@ -144,8 +144,8 @@ int control_loop_l(int looptime , float speed_req, int PWM_val)
   while ((millis()-lastMilli) <= looptime)   
   {  ;  }       // enter tmed loop                                                          
  noInterrupts();
-  speed_act=float(count_r- count_fomer)*1000/float(looptime*NUM_C);
-   PWM_val= PID_updata(PWM_val, speed_req, speed_act);   // compute PWM 
+  speed_act=float(count_l- count_fomer)*1000/float(looptime*NUM_C);
+  PWM_val= PID_updata(PWM_val, speed_req, speed_act);   // compute PWM 
 return constrain(PWM_val, 0, 255);
 }
   
