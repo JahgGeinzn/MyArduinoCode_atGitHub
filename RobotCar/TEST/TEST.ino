@@ -17,21 +17,13 @@ void setup(){
   pinMode(MoBB,OUTPUT);
 }
 void loop(){
-  int i=255;
-  int onoff=0;
+  if(digitalRead(SeFC))
+  {
     digitalWrite(MoAA,HIGH);
     digitalWrite(MoAB,LOW);
     digitalWrite(MoBA,HIGH);
     digitalWrite(MoBB,LOW);
-    if(digitalRead(SENSOR1)==LOW){
-    delay(5);
-    if(digitalRead(SENSOR1)==LOW){
-  digitalWrite(MAS,LOW);
-  digitalWrite(MBS,LOW);
-  }
-    }
-  else{
-    digitalWrite(MAS,HIGH);
-    digitalWrite(MBS,HIGH);
+    digitalWrite(MoAS,HIGH);
+    digitalWrite(MoBS,HIGH);
   }
 }

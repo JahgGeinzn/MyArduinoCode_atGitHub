@@ -19,66 +19,22 @@ void counter_l()
 {
   count_l++;
 }
-
-void motor_l(int s)
-{
-  if(s==0)
-  {
-    digitalWrite(maa,LOW);
-    digitalWrite(mab,LOW);
-    digitalWrite(mas,HIGH);
-  }
-  else if(s>0&&s<256)
-  {
-    digitalWrite(maa,HIGH);
-    digitalWrite(mab,LOW);
-    analogWrite(mas,s);
-    delay(20);
-  }
-  else if(s<0&&s>-256)
-  {
-    digitalWrite(maa,LOW);
-    digitalWrite(mab,HIGH);
-    analogWrite(mas,-s);
-    delay(20);
-  }
-  else digitalWrite(mas,LOW);
-}
-void motor_r(int s)
-{
-    if(s==0)
-  {
-    digitalWrite(mba,LOW);
-    digitalWrite(mbb,LOW);
-    digitalWrite(mbs,HIGH);
-  }
-  else if(s>0&&s<256)
-  {
-    digitalWrite(mba,HIGH);
-    digitalWrite(mbb,LOW);
-    analogWrite(mbs,s);
-    delay(20);
-  }
-  else if(s<0&&s>-256)
-  {
-    digitalWrite(mba,LOW);
-    digitalWrite(mbb,HIGH);
-    analogWrite(mbs,-s);
-    delay(20);
-  }
-  else digitalWrite(mbs,LOW);
-}
-
 void setup()
 {
   Serial.begin(9600);
+  digitalWrite(maa,HIGH);
+  digitalWrite(mab,LOW);
+  digitalWrite(mas,HIGH);
+  digitalWrite(mba,HIGH);
+  digitalWrite(mbb,LOW);
+  digitalWrite(mbs,HIGH);
   attachInterrupt(1,counter_r,CHANGE);
   attachInterrupt(0,counter_l,CHANGE);
 }
 
 void loop()
 {
-  int looptime=500;
+  int looptime=50;
   int NUM_C=8;
   long lastMilli;
   long count_fomer_r;
@@ -89,12 +45,10 @@ void loop()
   lastMilli=millis();
   count_fomer_r=count_r;
   count_fomer_l=count_l;
+  
   interrupts();
   while ((millis()-lastMilli) <= looptime)   
-  {
-  motor_r(255);
-  motor_l(200);
-  }       // enter tmed loop                                                          
+  { ; }       // enter tmed loop                                                          
   noInterrupts();
   speed_act_r=float(count_r- count_fomer_r)*1000/float(looptime*NUM_C);
   speed_act_l=float(count_l- count_fomer_l)*1000/float(looptime*NUM_C);
