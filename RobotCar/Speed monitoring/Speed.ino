@@ -84,19 +84,25 @@ void loop()
   int looptime=500;
   int NUM_C=8;
   long lastMilli;
-  long count_fomer;
+  long count_fomer_r;
+  long count_fomer_l;
   float speed_act_r;
+  float speed_act_l;
 
   lastMilli=millis();
   motor_r(255);
-  motor_l(255);
-  count_fomer=count_r;
+  motor_l(100);
+  count_fomer_r=count_r;
+  count_fomer_l=count_l;
   interrupts();
   while ((millis()-lastMilli) <= looptime)   
   {  ;  }       // enter tmed loop                                                          
   noInterrupts();
-  speed_act_r=float(count_r- count_fomer)*1000/float(looptime*NUM_C);
+  speed_act_r=float(count_r- count_fomer_r)*1000/float(looptime*NUM_C);
+  speed_act_l=float(count_l- count_fomer_l)*1000/float(looptime*NUM_C);
   Serial.print("Right Speed is ");
-  Serial.print
+  Serial.println(speed_act_r);
+  Serial.print("Left Speed is ");
+  Serial.println(speed_act_l);
 }
   
