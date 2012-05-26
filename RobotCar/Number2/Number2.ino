@@ -48,7 +48,7 @@ void loop()
   }
 }
 
-void motor_l(int s)
+void motor_r(int s)
 {
   if(s==0)
   {
@@ -72,7 +72,7 @@ void motor_l(int s)
   }
   else digitalWrite(mas,LOW);
 }
-void motor_r(int s)
+void motor_l(int s)
 {
     if(s==0)
   {
