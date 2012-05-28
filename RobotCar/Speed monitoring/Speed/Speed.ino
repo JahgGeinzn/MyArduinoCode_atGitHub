@@ -58,3 +58,34 @@ void loop()
   Serial.println(speed_act_l);
 }
   
+int control_loop_r(int looptime , float speed_req, int PWM_val)
+{
+  long lastMilli;
+  long count_fomer;
+  float speed_act;
+  lastMilli=millis();
+  count_fomer=count_r;
+  interrupts();
+  while ((millis()-lastMilli) <= looptime)   
+  {  ;  }       // enter tmed loop                                                          
+ noInterrupts();
+  speed_act=float(count_r- count_fomer)*1000/float(looptime*NUM_C);
+  PWM_val= PID_updata(PWM_val, speed_req, speed_act);   // compute PWM 
+return constrain(PWM_val, 0, 255);
+}
+
+int control_loop_l(int looptime , float speed_req, int PWM_val)
+{
+  long lastMilli;
+  long count_fomer;
+  float speed_act;
+  lastMilli=millis();
+  count_fomer=count_l;
+  interrupts();
+  while ((millis()-lastMilli) <= looptime)   
+  {  ;  }       // enter tmed loop                                                          
+ noInterrupts();
+  speed_act=float(count_l- count_fomer)*1000/float(looptime*NUM_C);
+  PWM_val= PID_updata(PWM_val, speed_req, speed_act);   // compute PWM 
+return constrain(PWM_val, 0, 255);
+}
