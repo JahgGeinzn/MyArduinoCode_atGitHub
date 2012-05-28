@@ -12,15 +12,15 @@ volatile long count_r=0;
 volatile long count_l=0;
 int PWM_val_r = 0;
 int PWM_val_l = 0;
-float v_req_r=1.25;
-float v_req_l=1;
-const int NUM_C_l=8;
+float v_req_r=1.56;
+float v_req_l=1.56;
+const int NUM_C_l=16;
 const int NUM_C_r=16;      //the number of counter of a roll.
                           //IF select CHANGE in attachInterrupt(0, rencoder, CHANGE) ,the  NUM_C should be multiple by 2
                            //Other selection in attachInterrupt(0, rencoder, FALLING), the  NUM_C is equal to the number of counter of a roll
-const int LOOPTIME =300;   //the loop time(ms) of PID control
+const int LOOPTIME =200;   //the loop time(ms) of PID control
  float Kp=3;          // PID proportional control Gain
- float Ki=4;          // PID i control gain
+ float Ki=5;          // PID i control gain
 
 void setup()
 {
@@ -123,12 +123,12 @@ int control_loop_r(int looptime , float speed_req_r, int PWM_val_r)
   interrupts();
   while ((millis()-lastMilli_r) <= looptime)   
   {  ;  }       // enter tmed loop                                                          
- noInterrupts();
+  noInterrupts();
   speed_act_r=float(count_r- count_fomer_r)*1000/float(looptime*NUM_C_r);
   Serial.print("Right Speed is ");
   Serial.println(speed_act_r);
   PWM_val_r= PID_updata(PWM_val_r, speed_req_r, speed_act_r);   // compute PWM 
-return constrain(PWM_val_r, 0, 255);
+  return constrain(PWM_val_r, 0, 255);
 }
 
 int control_loop_l(int looptime , float speed_req_l, int PWM_val_l)
@@ -141,11 +141,11 @@ int control_loop_l(int looptime , float speed_req_l, int PWM_val_l)
   interrupts();
   while ((millis()-lastMilli_l) <= looptime)   
   {  ;  }       // enter tmed loop                                                          
- noInterrupts();
+  noInterrupts();
   speed_act_l=float(count_l- count_fomer_l)*1000/float(looptime*NUM_C_l);
   Serial.print("Left Speed is ");
   Serial.println(speed_act_l);
   PWM_val_l= PID_updata(PWM_val_l, speed_req_l, speed_act_l);   // compute PWM 
-return constrain(PWM_val_l, 0, 255);
+  return constrain(PWM_val_l, 0, 255);
 }
   
