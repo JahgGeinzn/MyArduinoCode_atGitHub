@@ -10,6 +10,9 @@ int sfl=5;
 
 volatile long count_r=0;
 volatile long count_l=0;
+int looptime=50;
+int NUM_C_l=8;
+int NUM_C_r=16;  
 
 void counter_r()
 {
@@ -34,58 +37,40 @@ void setup()
 
 void loop()
 {
-  int looptime=50;
-  int NUM_C=8;
-  long lastMilli;
-  long count_fomer_r;
-  long count_fomer_l;
-  float speed_act_r;
-  float speed_act_l;
-  
-  lastMilli=millis();
-  count_fomer_r=count_r;
-  count_fomer_l=count_l;
-  
-  interrupts();
-  while ((millis()-lastMilli) <= looptime)   
-  { ; }       // enter tmed loop                                                          
-  noInterrupts();
-  speed_act_r=float(count_r- count_fomer_r)*1000/float(looptime*NUM_C);
-  speed_act_l=float(count_l- count_fomer_l)*1000/float(looptime*NUM_C);
+  speed_act_r=speed_r(50);
   Serial.print("Right Speed is ");
   Serial.println(speed_act_r);
+  speed_act_l=speed_l(50);
   Serial.print("Left Speed is ");
   Serial.println(speed_act_l);
 }
   
-int control_loop_r(int looptime , float speed_req, int PWM_val)
+int speed_r(int looptime_r)
 {
-  long lastMilli;
-  long count_fomer;
-  float speed_act;
-  lastMilli=millis();
-  count_fomer=count_r;
+  long lastMilli_r;
+  long count_fomer_r;
+  float speed_act_r;
+  lastMilli_r=millis();
+  count_fomer_r=count_r;
   interrupts();
-  while ((millis()-lastMilli) <= looptime)   
+  while ((millis()-lastMilli_r) <= looptime)   
   {  ;  }       // enter tmed loop                                                          
- noInterrupts();
-  speed_act=float(count_r- count_fomer)*1000/float(looptime*NUM_C);
-  PWM_val= PID_updata(PWM_val, speed_req, speed_act);   // compute PWM 
-return constrain(PWM_val, 0, 255);
+  noInterrupts();
+  speed_act_r=float(count_r- count_fomer_r)*1000/float(looptime_r*NUM_C_r);
+  return speed_act_r;;
 }
 
-int control_loop_l(int looptime , float speed_req, int PWM_val)
+int speed_l(int looptime_l)
 {
-  long lastMilli;
-  long count_fomer;
-  float speed_act;
-  lastMilli=millis();
-  count_fomer=count_l;
+  long lastMilli_l;
+  long count_fomer_l;
+  float speed_act_l;
+  lastMilli_l=millis();
+  count_fomer_l=count_l;
   interrupts();
-  while ((millis()-lastMilli) <= looptime)   
+  while ((millis()-lastMilli_l) <= looptime)   
   {  ;  }       // enter tmed loop                                                          
- noInterrupts();
-  speed_act=float(count_l- count_fomer)*1000/float(looptime*NUM_C);
-  PWM_val= PID_updata(PWM_val, speed_req, speed_act);   // compute PWM 
-return constrain(PWM_val, 0, 255);
+  noInterrupts();
+  speed_act_l=float(count_l- count_fomer_l)*1000/float(looptime_l*NUM_C_l);
+  return speed_act_l;
 }
