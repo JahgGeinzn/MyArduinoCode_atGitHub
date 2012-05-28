@@ -12,17 +12,19 @@ volatile long count_r=0;
 volatile long count_l=0;
 int PWM_val_r = 0;
 int PWM_val_l = 0;
-float v_req_r=0;
-float v_req_l=0;
-const int NUM_C=8;      //the number of counter of a roll.
+float v_req_r=1.25;
+float v_req_l=1;
+const int NUM_C_l=8;
+const int NUM_C_r=16;      //the number of counter of a roll.
                           //IF select CHANGE in attachInterrupt(0, rencoder, CHANGE) ,the  NUM_C should be multiple by 2
                            //Other selection in attachInterrupt(0, rencoder, FALLING), the  NUM_C is equal to the number of counter of a roll
-const int LOOPTIME =100;   //the loop time(ms) of PID control
- float Kp=1;          // PID proportional control Gain
+const int LOOPTIME =300;   //the loop time(ms) of PID control
+ float Kp=3;          // PID proportional control Gain
  float Ki=4;          // PID i control gain
 
 void setup()
 {
+  Serial.begin(9600);
   pinMode(mas,OUTPUT);
   pinMode(maa,OUTPUT);
   pinMode(mab,OUTPUT);
@@ -36,16 +38,10 @@ void setup()
 
 void loop()
 {
-  
-  if(digitalRead(sfc))
-  {
-    v_req_r=2;
-    v_req_l=2;
-    PWM_val_r=control_loop_r(LOOPTIME,v_req_r,PWM_val_r);
-    PWM_val_l=control_loop_l(LOOPTIME,v_req_l,PWM_val_l);
-    motor_r(PWM_val_r);
-    motor_l(PWM_val_l);
-  }
+  motor_r(PWM_val_r);
+  motor_l(PWM_val_l);
+  PWM_val_r=control_loop_r(LOOPTIME,v_req_r,PWM_val_r);
+  PWM_val_l=control_loop_l(LOOPTIME,v_req_l,PWM_val_l);
 }
 
 void motor_r(int s)
@@ -117,35 +113,39 @@ static float last_I=0;
   return pidTerm;
 }
 
-int control_loop_r(int looptime , float speed_req, int PWM_val)
+int control_loop_r(int looptime , float speed_req_r, int PWM_val_r)
 {
-  long lastMilli;
-  long count_fomer;
-  float speed_act;
-  lastMilli=millis();
-  count_fomer=count_r;
+  long lastMilli_r;
+  long count_fomer_r;
+  float speed_act_r;
+  lastMilli_r=millis();
+  count_fomer_r=count_r;
   interrupts();
-  while ((millis()-lastMilli) <= looptime)   
+  while ((millis()-lastMilli_r) <= looptime)   
   {  ;  }       // enter tmed loop                                                          
  noInterrupts();
-  speed_act=float(count_r- count_fomer)*1000/float(looptime*NUM_C);
-  PWM_val= PID_updata(PWM_val, speed_req, speed_act);   // compute PWM 
-return constrain(PWM_val, 0, 255);
+  speed_act_r=float(count_r- count_fomer_r)*1000/float(looptime*NUM_C_r);
+  Serial.print("Right Speed is ");
+  Serial.println(speed_act_r);
+  PWM_val_r= PID_updata(PWM_val_r, speed_req_r, speed_act_r);   // compute PWM 
+return constrain(PWM_val_r, 0, 255);
 }
 
-int control_loop_l(int looptime , float speed_req, int PWM_val)
+int control_loop_l(int looptime , float speed_req_l, int PWM_val_l)
 {
-  long lastMilli;
-  long count_fomer;
-  float speed_act;
-  lastMilli=millis();
-  count_fomer=count_l;
+  long lastMilli_l;
+  long count_fomer_l;
+  float speed_act_l;
+  lastMilli_l=millis();
+  count_fomer_l=count_l;
   interrupts();
-  while ((millis()-lastMilli) <= looptime)   
+  while ((millis()-lastMilli_l) <= looptime)   
   {  ;  }       // enter tmed loop                                                          
  noInterrupts();
-  speed_act=float(count_l- count_fomer)*1000/float(looptime*NUM_C);
-  PWM_val= PID_updata(PWM_val, speed_req, speed_act);   // compute PWM 
-return constrain(PWM_val, 0, 255);
+  speed_act_l=float(count_l- count_fomer_l)*1000/float(looptime*NUM_C_l);
+  Serial.print("Left Speed is ");
+  Serial.println(speed_act_l);
+  PWM_val_l= PID_updata(PWM_val_l, speed_req_l, speed_act_l);   // compute PWM 
+return constrain(PWM_val_l, 0, 255);
 }
   
