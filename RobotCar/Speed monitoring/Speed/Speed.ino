@@ -37,6 +37,8 @@ void setup()
 
 void loop()
 {
+  motor_r(255);
+  motor_l(255);
   speed_act_r=speed_r(50);
   Serial.print("Right Speed is ");
   Serial.println(speed_act_r);
@@ -44,7 +46,57 @@ void loop()
   Serial.print("Left Speed is ");
   Serial.println(speed_act_l);
 }
-  
+
+void motor_r(int s)
+{
+  if(s==0)
+  {
+    digitalWrite(maa,LOW);
+    digitalWrite(mab,LOW);
+    digitalWrite(mas,HIGH);
+  }
+  else if(s>0&&s<256)
+  {
+    digitalWrite(maa,HIGH);
+    digitalWrite(mab,LOW);
+    analogWrite(mas,s);
+    delay(20);
+  }
+  else if(s<0&&s>-256)
+  {
+    digitalWrite(maa,LOW);
+    digitalWrite(mab,HIGH);
+    analogWrite(mas,-s);
+    delay(20);
+  }
+  else digitalWrite(mas,LOW);
+}
+
+void motor_l(int s)
+{
+    if(s==0)
+  {
+    digitalWrite(mba,LOW);
+    digitalWrite(mbb,LOW);
+    digitalWrite(mbs,HIGH);
+  }
+  else if(s>0&&s<256)
+  {
+    digitalWrite(mba,HIGH);
+    digitalWrite(mbb,LOW);
+    analogWrite(mbs,s);
+    delay(20);
+  }
+  else if(s<0&&s>-256)
+  {
+    digitalWrite(mba,LOW);
+    digitalWrite(mbb,HIGH);
+    analogWrite(mbs,-s);
+    delay(20);
+  }
+  else digitalWrite(mbs,LOW);
+}
+
 int speed_r(int looptime_r)
 {
   long lastMilli_r;
