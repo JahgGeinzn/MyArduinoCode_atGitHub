@@ -12,8 +12,8 @@ volatile long count_r=0;
 volatile long count_l=0;
 int PWM_val_r = 0;
 int PWM_val_l = 0;
-float v_req_r=1.56;
-float v_req_l=1.56;
+float v_req_r=0;
+float v_req_l=0;
 const int NUM_C_l=16;
 const int NUM_C_r=16;      //the number of counter of a roll.
                           //IF select CHANGE in attachInterrupt(0, rencoder, CHANGE) ,the  NUM_C should be multiple by 2
@@ -38,6 +38,54 @@ void setup()
 
 void loop()
 {
+  if(digitalRead(sfl)==1&&digitalRead(sfc)==0&&digitalRead(sfr)==1)
+  forward();
+  if(digitalRead(sfl)==1&&digitalRead(sfc)==0&&digitalRead(sfr)==0)
+  turnright_full();
+  if(digitalRead(sfl)==0&&digitalRead(sfc)==0&&digitalRead(sfr)==1)
+  turnleft_full();
+  if(digitalRead(sfl)==1&&digitalRead(sfc)==1&&digitalRead(sfr)==0)
+  turnright();
+  if(digitalRead(sfl)==0&&digitalRead(sfc)==1&&digitalRead(sfr)==1)
+  turnleft();  
+}
+
+void forward()
+{
+  v_req_r=1.56;
+  v_req_r=1.56;
+  motor_r(PWM_val_r);
+  motor_l(PWM_val_l);
+  PWM_val_r=control_loop_r(LOOPTIME,v_req_r,PWM_val_r);
+  PWM_val_l=control_loop_l(LOOPTIME,v_req_l,PWM_val_l);
+}
+void turnleft_full()
+{
+  v_req_r=1.56;
+  motor_r(PWM_val_r);
+  motor_l(0);
+  PWM_val_r=control_loop_r(LOOPTIME,v_req_r,PWM_val_r);
+}
+void turnright_full()
+{
+  v_req_l=1.56;
+  motor_r(0);
+  motor_l(PWM_val_l);
+  PWM_val_l=control_loop_l(LOOPTIME,v_req_l,PWM_val_l);
+}
+void turnleft()
+{
+  v_req_r=1.56;
+  v_req_r=0.56;
+  motor_r(PWM_val_r);
+  motor_l(PWM_val_l);
+  PWM_val_r=control_loop_r(LOOPTIME,v_req_r,PWM_val_r);
+  PWM_val_l=control_loop_l(LOOPTIME,v_req_l,PWM_val_l);
+}
+void turnright()
+{
+  v_req_r=0.56;
+  v_req_r=1.56;
   motor_r(PWM_val_r);
   motor_l(PWM_val_l);
   PWM_val_r=control_loop_r(LOOPTIME,v_req_r,PWM_val_r);
