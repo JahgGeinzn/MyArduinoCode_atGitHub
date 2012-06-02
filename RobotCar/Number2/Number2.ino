@@ -18,7 +18,7 @@ const int NUM_C_l=16;
 const int NUM_C_r=16;      //the number of counter of a roll.
                           //IF select CHANGE in attachInterrupt(0, rencoder, CHANGE) ,the  NUM_C should be multiple by 2
                            //Other selection in attachInterrupt(0, rencoder, FALLING), the  NUM_C is equal to the number of counter of a roll
-const int LOOPTIME =200;   //the loop time(ms) of PID control
+const int LOOPTIME =50;   //the loop time(ms) of PID control
  float Kp=3;          // PID proportional control Gain
  float Ki=5;          // PID i control gain
 
@@ -45,9 +45,9 @@ void loop()
   if(digitalRead(sfl)==0&&digitalRead(sfc)==0&&digitalRead(sfr)==1)
   turnleft_full();
   if(digitalRead(sfl)==1&&digitalRead(sfc)==1&&digitalRead(sfr)==0)
-  turnright();
+  turnright_full();
   if(digitalRead(sfl)==0&&digitalRead(sfc)==1&&digitalRead(sfr)==1)
-  turnleft();  
+  turnleft_full();  
 }
 
 void forward()
@@ -76,17 +76,17 @@ void turnright_full()
 void turnleft()
 {
   v_req_r=1.56;
-  v_req_r=0.56;
+  v_req_r=0.1;
   motor_r(PWM_val_r);
-  motor_l(PWM_val_l);
+  motor_l(-PWM_val_l);
   PWM_val_r=control_loop_r(LOOPTIME,v_req_r,PWM_val_r);
   PWM_val_l=control_loop_l(LOOPTIME,v_req_l,PWM_val_l);
 }
 void turnright()
 {
-  v_req_r=0.56;
+  v_req_r=0.1;
   v_req_r=1.56;
-  motor_r(PWM_val_r);
+  motor_r(-PWM_val_r);
   motor_l(PWM_val_l);
   PWM_val_r=control_loop_r(LOOPTIME,v_req_r,PWM_val_r);
   PWM_val_l=control_loop_l(LOOPTIME,v_req_l,PWM_val_l);
