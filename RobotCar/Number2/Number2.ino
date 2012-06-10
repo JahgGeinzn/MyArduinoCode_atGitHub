@@ -53,7 +53,7 @@ void loop()
 void forward()
 {
   v_req_r=1.56;
-  v_req_r=1.56;
+  v_req_l=1.56;
   motor_r(PWM_val_r);
   motor_l(PWM_val_l);
   PWM_val_r=control_loop_r(LOOPTIME,v_req_r,PWM_val_r);
@@ -71,24 +71,6 @@ void turnright_full()
   v_req_l=1.56;
   motor_r(0);
   motor_l(PWM_val_l);
-  PWM_val_l=control_loop_l(LOOPTIME,v_req_l,PWM_val_l);
-}
-void turnleft()
-{
-  v_req_r=1.56;
-  v_req_r=0.1;
-  motor_r(PWM_val_r);
-  motor_l(-PWM_val_l);
-  PWM_val_r=control_loop_r(LOOPTIME,v_req_r,PWM_val_r);
-  PWM_val_l=control_loop_l(LOOPTIME,v_req_l,PWM_val_l);
-}
-void turnright()
-{
-  v_req_r=0.1;
-  v_req_r=1.56;
-  motor_r(-PWM_val_r);
-  motor_l(PWM_val_l);
-  PWM_val_r=control_loop_r(LOOPTIME,v_req_r,PWM_val_r);
   PWM_val_l=control_loop_l(LOOPTIME,v_req_l,PWM_val_l);
 }
 
